@@ -1,6 +1,6 @@
 from models import db
 
-class Cliente(db.Model):  # <-- Nombre correcto
+class Cliente(db.Model):
     __tablename__ = "clientes"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -11,8 +11,13 @@ class Cliente(db.Model):  # <-- Nombre correcto
     telefono = db.Column(db.String(20), nullable=False)
     fecha_registro = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    # Relación con vehículos (¡corregir nombre de la clase!)
-    vehiculos = db.relationship("Vehiculo", backref="cliente", cascade="all, delete")  # <-- "Vehiculo", no "Vehículo"
+    # Relación con Vehiculo
+    vehiculos = db.relationship(
+        "Vehiculo",
+        backref="cliente",
+        cascade="all, delete",
+        passive_deletes=True  # 💥 IMPORTANTE para PostgreSQL
+    )
 
-    def __repr__(self):  # <-- Método bien escrito
+    def __repr__(self):
         return f"<Cliente {self.nombre} {self.apellido}>"

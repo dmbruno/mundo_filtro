@@ -5,11 +5,23 @@ from flask_cors import CORS
 from config import Config
 from flask_jwt_extended import JWTManager
 from config import Config
-
 # Importar la base de datos correctamente
 from models import db
 from sqlalchemy import event  # Importar event para manejar conexiones
 
+import sqlite3
+from sqlalchemy.engine import Engine
+
+
+@event.listens_for(Engine, "connect")
+def enable_foreign_keys(dbapi_connection, connection_record):
+    if isinstance(dbapi_connection, sqlite3.Connection):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON;")
+        cursor.close()
+        
+        
+        
 # Inicializar la app
 app = Flask(__name__)
 
@@ -29,11 +41,7 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_cred
 # Crear el contexto de la aplicación para evitar errores
 with app.app_context():
     # Activar claves foráneas en cada conexión
-    @event.listens_for(db.engine, "connect")
-    def enable_foreign_keys(dbapi_connection, connection_record):
-        cursor = dbapi_connection.cursor()
-        cursor.execute("PRAGMA foreign_keys=ON;")
-        cursor.close()
+   
 
     # Importar modelos para que Flask los detecte
     from models.cliente import Cliente
