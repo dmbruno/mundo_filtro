@@ -44,7 +44,7 @@ def get_vehiculos_por_cliente(cliente_id):
     vehiculos = Vehiculo.query.filter_by(cliente_id=cliente_id).all()
 
     if not vehiculos:
-        return jsonify({"error": "No se encontraron vehículos para este cliente"}), 404
+        return jsonify([])
 
     return jsonify([
         {
