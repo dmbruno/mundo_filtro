@@ -8,6 +8,7 @@ class Vehiculo(db.Model):
     marca = db.Column(db.String(50), nullable=False)
     modelo = db.Column(db.String(50), nullable=False)
     anio = db.Column(db.Integer, nullable=False)
+    gestionado = db.Column(db.Boolean, default=False)
 
     cliente_id = db.Column(
         db.Integer,

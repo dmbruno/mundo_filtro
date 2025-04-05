@@ -1,4 +1,6 @@
 from models import db
+from sqlalchemy import Date
+
 
 class Servicio(db.Model):
     __tablename__ = 'servicios'
@@ -17,7 +19,7 @@ class Servicio(db.Model):
         nullable=False
     )
 
-    fecha_servicio = db.Column(db.DateTime, default=db.func.current_timestamp())
+    fecha_servicio = db.Column(db.Date)
     cambio_aceite = db.Column(db.String(100))
     filtro_aceite = db.Column(db.Boolean, default=False)
     filtro_aire = db.Column(db.Boolean, default=False)

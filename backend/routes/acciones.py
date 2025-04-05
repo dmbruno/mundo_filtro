@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from models import db, Cliente, Vehiculo, Servicio
 
 acciones_bp = Blueprint("acciones", __name__)
@@ -148,6 +148,7 @@ def vehiculos_con_ultimo_servicio():
             subconsulta.c.ultimo_servicio
         ).join(Vehiculo, Vehiculo.cliente_id == Cliente.id) \
          .outerjoin(subconsulta, subconsulta.c.vehiculo_id == Vehiculo.id) \
+         .filter(Vehiculo.gestionado == False) \
          .order_by(Cliente.apellido, Cliente.nombre)
 
         datos = []
@@ -169,3 +170,22 @@ def vehiculos_con_ultimo_servicio():
     except Exception as e:
         print("❌ Error al traer vehículos con último servicio:", e)
         return jsonify({"error": str(e)}), 500
+    
+    
+    
+@acciones_bp.route('/marcar-gestionado/<int:vehiculo_id>', methods=['PUT'])
+def marcar_gestionado(vehiculo_id):
+    vehiculo = Vehiculo.query.get(vehiculo_id)
+
+    if not vehiculo:
+        return jsonify({"error": "Vehículo no encontrado"}), 404
+
+    vehiculo.gestionado = True
+
+    try:
+        db.session.commit()
+        return jsonify({"message": "Vehículo marcado como gestionado"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Error al marcar gestionado: {str(e)}"}), 500
+    

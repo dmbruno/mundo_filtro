@@ -36,10 +36,9 @@ migrate = Migrate(app, db)
 
 
 # Para permitir solicitudes desde http://localhost:3000 específicamente
-CORS(app, origins=[
-    "https://mundo-filtro-frontend.vercel.app",
-    "http://localhost:3000"
-], supports_credentials=True)
+CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"], supports_credentials=True)
+
+
 
 # Crear el contexto de la aplicación para evitar errores
 with app.app_context():
@@ -81,4 +80,4 @@ def home():
     return "¡Bienvenido a la API del lubricentro!"
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)
