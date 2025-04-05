@@ -36,7 +36,11 @@ migrate = Migrate(app, db)
 
 
 # Para permitir solicitudes desde http://localhost:3000 específicamente
-CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"], supports_credentials=True)
+CORS(app, origins=[
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://mundo-filtro-frontend.vercel.app"
+], supports_credentials=True)
 
 
 
