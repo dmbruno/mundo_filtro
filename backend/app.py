@@ -25,9 +25,17 @@ def enable_foreign_keys(dbapi_connection, connection_record):
 # Inicializar la app
 app = Flask(__name__)
 
+CORS(app, origins=[
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://mundo-filtro-frontend.vercel.app"
+], supports_credentials=True)
+
+
 app.config.from_object(Config)
 
 jwt = JWTManager(app)
+
 
 print("🔐 JWT_SECRET_KEY:", app.config['JWT_SECRET_KEY'])
 # Inicializar la base de datos con la app
@@ -35,12 +43,9 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
+
 # Para permitir solicitudes desde http://localhost:3000 específicamente
-CORS(app, origins=[
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://mundo-filtro-frontend.vercel.app"
-], supports_credentials=True)
+
 
 
 
@@ -84,4 +89,4 @@ def home():
     return "¡Bienvenido a la API del lubricentro!"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5002, debug=True)
