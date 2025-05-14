@@ -63,17 +63,14 @@ def get_cliente(id):
     })
 
 # Crear un nuevo cliente
-@clientes_bp.route("/", methods=["POST"])  # <-- Solo POST
-
+@clientes_bp.route("/", methods=["POST"])
 def create_cliente():
     try:
         data = request.json
 
-        # Verificar campos requeridos
         if not all(key in data for key in ("nombre", "apellido", "cuit", "telefono", "email")):
             return jsonify({"error": "Faltan datos requeridos"}), 400
 
-        # Crear nuevo cliente
         nuevo_cliente = Cliente(
             nombre=data["nombre"],
             apellido=data["apellido"],
@@ -89,6 +86,7 @@ def create_cliente():
 
     except Exception as e:
         db.session.rollback()
+        print("❌ ERROR:", e)  # <-- Esto agregalo
         return jsonify({"error": f"Error al crear cliente: {str(e)}"}), 500
 
         
